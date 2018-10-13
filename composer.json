@@ -1,0 +1,16 @@
+{
+    "name": "gamboa/admin-bundle",
+    "description": "Admin Bundle for Symfony 4",
+    "type": "symfony-bundle",
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.1.3",
+        "sensio/framework-extra-bundle": "*",
+        "symfony/validator": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gamboa\\AdminBundle\\": ""
+        }
+    }
+}
