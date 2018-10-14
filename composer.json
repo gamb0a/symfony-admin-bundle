@@ -3,10 +3,12 @@
     "description": "Admin Bundle for Symfony 4",
     "type": "symfony-bundle",
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": "^7.1.3",
         "sensio/framework-extra-bundle": "*",
-        "symfony/validator": "*"
+        "symfony/validator": "*",
+        "doctrine/doctrine-migrations-bundle": "^2.0"
     },
     "autoload": {
         "psr-4": {
