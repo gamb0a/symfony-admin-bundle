@@ -2,6 +2,7 @@
 
 namespace Gamboa\AdminBundle\Controller;
 
+use Gamboa\AdminBundle\Request\RegisterRequest;
 use Gamboa\AdminBundle\Request\LoginRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +18,10 @@ class AuthController extends Controller
     /**
      * @Route("/register", methods={"GET"}, name="gadmin.auth.register")
      */
-    public function register()
+    public function register(Request $req)
     {
-        throw new NotFoundHttpException();
+        $request = new RegisterRequest($req);
+        return ["rut" => $request->get("rut"), "pass" => $request->get("password")];
     }
 
     /**

@@ -21,9 +21,15 @@ abstract class AbstractRequest
      */
     private $params;
 
+    /**
+     * @var array params  The defined params
+     */
+    private $validator;
+
     function __construct(Request $request)
     {
         $this->request = $request;
+        $this->validator = Validation::createValidator();
         $this->setParameters();
         $this->validate();
         $this->customValidation();
@@ -38,11 +44,12 @@ abstract class AbstractRequest
         ];
     }
 
-    protected function addRequired(string $name, array $validations = [])
+    protected function addRequired(string $name, string $message, array $validations = [])
     {
         $this->params[$name] = [
             "type" => self::Required,
-            "validation" => $validations
+            "validation" => $validations,
+            "defaultMessage" => $message
         ];
     }
 
@@ -59,15 +66,14 @@ abstract class AbstractRequest
     private function validate()
     {
         $errorList = [];
-        $validator = Validation::createValidator();
         foreach ($this->params as $key => $param) {
             if ($param["type"] == self::Required) {
                 if (!$this->request->request->has($key) && !$this->request->query->has($key)) {
-                    $errorList[$key] = "Debe especificar un ${paramName}";
+                    $errorList[$key] = $param["defaultMessage"];
                 } else {
                     $this->params[$key]["value"] = $this->request->get($key);
                     foreach ($param["validation"] as $validation) {
-                        $errors = $validator->validate($this->params[$key]["value"], $validation->getConstraint());
+                        $errors = $this->validator->validate($this->params[$key]["value"], $validation->getConstraint());
                         if (count($errors) > 0) {
                             $errorList[$key] = $errors[0]->getMessage();
                             continue;
@@ -80,7 +86,7 @@ abstract class AbstractRequest
                 }
 
                 foreach ($param["validation"] as $validation) {
-                    $errors = $validator->validate($this->params[$key]["value"], $validation->getConstraint());
+                    $errors = $this->validator->validate($this->params[$key]["value"], $validation->getConstraint());
                     if (count($errors) > 0) {
                         $errorList[$key] = $errors[0]->getMessage();
                         continue;
