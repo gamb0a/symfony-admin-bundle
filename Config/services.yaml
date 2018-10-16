@@ -5,6 +5,6 @@ services:
     Gamboa\AdminBundle\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
-    Gamboa\AdminBundle\EventListener\RequestListener:
+    Gamboa\AdminBundle\EventListener\ControllerListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.request }
+            - { name: kernel.event_listener, event: kernel.controller }

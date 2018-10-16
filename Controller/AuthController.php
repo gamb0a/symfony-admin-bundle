@@ -2,11 +2,15 @@
 
 namespace Gamboa\AdminBundle\Controller;
 
+use Gamboa\AdminBundle\Annotation\PublicAction;
+use Gamboa\AdminBundle\Annotation\NotAuthenticated;
+use Gamboa\AdminBundle\Annotation\Authenticated;
+
 use Gamboa\AdminBundle\Request\RegisterRequest;
 use Gamboa\AdminBundle\Request\LoginRequest;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -17,6 +21,7 @@ class AuthController extends Controller
 {
     /**
      * @Route("/register", methods={"GET"}, name="gadmin.auth.register")
+     * @NotAuthenticated
      */
     public function register(Request $req)
     {
@@ -26,6 +31,7 @@ class AuthController extends Controller
 
     /**
      * @Route("/login", methods={"GET"}, name="gadmin.auth.login")
+     * @Authenticated("gadmin.auth.login", description="Login into the app")
      */
     public function login(Request $req)
     {
@@ -35,6 +41,7 @@ class AuthController extends Controller
 
     /**
      * @Route("/check", methods={"GET"}, name="gadmin.auth.check")
+     * @Authenticated("gadmin.auth.check", description="Check current session")
      */
     public function check()
     {
@@ -43,6 +50,7 @@ class AuthController extends Controller
 
     /**
      * @Route("/logout", methods={"GET"}, name="gadmin.auth.logout")
+     * @Authenticated("gadmin.auth.logout", description="Logout current session")
      */
     public function logout()
     {

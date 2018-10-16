@@ -16,7 +16,7 @@ class RegisterRequest extends AbstractRequest
         ]);
 
         $this->addRequired("name", "Debe ingresar un nombre", [
-            new Validation(new Assert\NotBlank(), "Debe ingresar un rut")
+            new Validation(new Assert\NotBlank(), "Debe ingresar un nombre")
         ]);
         
         $this->addRequired("password", "Debe ingresar una contraseña", [
