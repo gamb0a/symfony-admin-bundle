@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class AuthService
 {
-    function isValid(string $token) : boolean
+    function isValid(string $token) : bool
     {
         return false;
     }
@@ -22,9 +22,9 @@ class AuthService
         ]);
     }
 
-    function login(LoginRequest $req)
+    function login(LoginRequest $req) : array
     {
-
+        return ["success" => true];
     }
 
     function register(RegisterRequest $req)

@@ -11,6 +11,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 class RequestHelper
 {
+    const AUTH_DEFAULT = -1;
     const AUTHENTICATED = 1;
     const NOT_AUTHENTICATED = 2;
     const PUBLIC_ACCESS = 3;
@@ -20,6 +21,11 @@ class RequestHelper
     function __construct(Request $req)
     {
         $this->request = $req;
+    }
+
+    function hasBearerToken() : bool
+    {
+        return $this->request->headers->has("Authorization");
     }
 
     function getBearerToken() : string
@@ -39,7 +45,7 @@ class RequestHelper
         $reflectionMethod = new \ReflectionMethod($controller[0], $controller[1]);
         $reader = new AnnotationReader();
         // By default, all actions needs authentication
-        $currentType = self::AUTHENTICATED;
+        $currentType = self::AUTH_DEFAULT;
         foreach ($reader->getMethodAnnotations($reflectionMethod) as $annotation) {
             if ($annotation instanceof Authenticated) {
                 $currentType = self::AUTHENTICATED;

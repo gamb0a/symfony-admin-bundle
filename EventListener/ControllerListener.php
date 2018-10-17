@@ -43,16 +43,17 @@ class ControllerListener
         }
 
         $authenticatedUser = null;
-        $bearerToken = $requestHelper->getBearerToken();
-        if ($authService->isValid($bearerToken))
-            $authenticatedUser = $authService->getUser($bearerToken);
+        $bearerToken = null;
+        if ($requestHelper->hasBearerToken()) {
+            $bearerToken = $requestHelper->getBearerToken();
+            if ($authService->isValid($bearerToken))
+                $authenticatedUser = $authService->getUser($bearerToken);
+        }
         
         // if its an AuthenticatedAction, we need to validate
         // the current session and its actions
         if ($typeOfAction === RequestHelper::AUTHENTICATED) {
-
             $currentActionAnnotation = $requestHelper->getAuthenticatedAnnotation();
-
             if ($authenticatedUser == null) {
                 $this->logger->error("UnatuhenticatedUser trying to execute AuthenticatedAction");
                 throw new AccessDeniedHttpException("No tiene permiso para acceder a esta sección");

@@ -7,9 +7,10 @@ use Gamboa\AdminBundle\Annotation\NotAuthenticated;
 use Gamboa\AdminBundle\Annotation\Authenticated;
 
 use Gamboa\AdminBundle\Request\RegisterRequest;
-use Gamboa\AdminBundle\Request\LoginRequest;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Gamboa\AdminBundle\Service\AuthService;
+use Gamboa\AdminBundle\Request\LoginRequest;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @Route("/auth")
  */
-class AuthController extends Controller
+class AuthController extends AbstractController
 {
     /**
      * @Route("/register", methods={"GET"}, name="gadmin.auth.register")
@@ -33,15 +34,13 @@ class AuthController extends Controller
      * @Route("/login", methods={"GET"}, name="gadmin.auth.login")
      * @NotAuthenticated
      */
-    public function login(Request $req)
-    {
-        $request = new LoginRequest($req);
-        return ["rut" => $request->get("rut"), "pass" => $request->get("password")];
+    public function login(Request $req, AuthService $auth)
+    {   
+        return $auth->login(new LoginRequest($req));
     }
 
     /**
      * @Route("/check", methods={"GET"}, name="gadmin.auth.check")
-     * @Authenticated("gadmin.auth.check", description="Check current session")
      */
     public function check()
     {

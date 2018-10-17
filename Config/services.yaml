@@ -1,6 +1,14 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
     gadmin.auth_service:
         class: Gamboa\AdminBundle\Service\AuthService
+
+    Gamboa\AdminBundle\Service\AuthService: '@gadmin.auth_service'
+
     Gamboa\AdminBundle\EventListener\ViewListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view }
@@ -8,7 +16,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
     Gamboa\AdminBundle\EventListener\ControllerListener:
-        arguments: ['@logger', '@gadmin.auth_service']
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
-            - { name: monolog.logger, channel: app }
+
+    Gamboa\AdminBundle\Controller\:
+        resource: '../Controller'
+        tags: ['controller.service_arguments']
