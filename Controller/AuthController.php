@@ -31,7 +31,7 @@ class AuthController extends Controller
 
     /**
      * @Route("/login", methods={"GET"}, name="gadmin.auth.login")
-     * @Authenticated("gadmin.auth.login", description="Login into the app")
+     * @NotAuthenticated
      */
     public function login(Request $req)
     {

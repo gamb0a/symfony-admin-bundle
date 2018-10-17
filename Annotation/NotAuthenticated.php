@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
  */
 class NotAuthenticated extends ConfigurationAnnotation
 {
-
     /**
      * @return string
      * @see ConfigurationInterface

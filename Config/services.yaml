@@ -1,4 +1,6 @@
 services:
+    gadmin.auth_service:
+        class: Gamboa\AdminBundle\Service\AuthService
     Gamboa\AdminBundle\EventListener\ViewListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view }
@@ -6,5 +8,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
     Gamboa\AdminBundle\EventListener\ControllerListener:
+        arguments: ['@logger', '@gadmin.auth_service']
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
+            - { name: monolog.logger, channel: app }

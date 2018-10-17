@@ -18,11 +18,11 @@ class RegisterRequest extends AbstractRequest
         $this->addRequired("name", "Debe ingresar un nombre", [
             new Validation(new Assert\NotBlank(), "Debe ingresar un nombre")
         ]);
-        
+
         $this->addRequired("password", "Debe ingresar una contraseña", [
             new Validation(new Assert\NotBlank(), "Debe ingresar una contraseña"),
             new Validation(new Assert\Length(array(
-                'min'        => 8,
+                'min' => 8,
                 'minMessage' => 'La contraseña debe tener al menos {{ limit }} caracteres',
             )))
         ]);
