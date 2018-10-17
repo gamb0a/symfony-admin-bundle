@@ -4,10 +4,8 @@ services:
         autoconfigure: true
         public: false
 
-    gadmin.auth_service:
-        class: Gamboa\AdminBundle\Service\AuthService
-
-    Gamboa\AdminBundle\Service\AuthService: '@gadmin.auth_service'
+    Gamboa\AdminBundle\Service\AuthService:
+        autowire: true
 
     Gamboa\AdminBundle\EventListener\ViewListener:
         tags:

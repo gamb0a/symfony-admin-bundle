@@ -49,7 +49,6 @@ class AuthController extends AbstractController
 
     /**
      * @Route("/logout", methods={"GET"}, name="gadmin.auth.logout")
-     * @Authenticated("gadmin.auth.logout", description="Logout current session")
      */
     public function logout()
     {
