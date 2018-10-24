@@ -22,9 +22,28 @@ class AuthService
         ]);
     }
 
-    function login(LoginRequest $req) : array
+    function login(LoginRequest $req, UserService $userService, SessionService $sessionService) : array
     {
-        return ["success" => true];
+        $rut = $req->get("rut");
+        $password = $req->get("password");
+
+        // if user exists
+        if (!$userService->exists($rut)) ;
+            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", ["general" => "Rut y/o Contraseña inválidos"]); 
+            
+        $user = $userService->getUserByRut($rut);
+        // if its the correct password
+        if (!$user->passwordEqualsTo($password))
+            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", ["general" => "Rut y/o Contraseña inválidos"]); 
+
+        // if its active
+        if (!$user->isActive())
+            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", ["general" => "La cuenta no está activa"]);
+
+        // generate a new token sessio for the given user
+        $token = $sessionService->generateTokenForUser($user);
+
+        return $token;
     }
 
     function register(RegisterRequest $req)

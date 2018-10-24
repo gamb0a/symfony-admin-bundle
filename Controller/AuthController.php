@@ -36,7 +36,9 @@ class AuthController extends AbstractController
      */
     public function login(Request $req, AuthService $auth)
     {   
-        return $auth->login(new LoginRequest($req));
+        $token = $auth->login(new LoginRequest($req));
+        // TODO set token
+        return ["success" => true, "token" => $token];
     }
 
     /**

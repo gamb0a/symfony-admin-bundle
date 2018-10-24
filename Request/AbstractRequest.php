@@ -21,9 +21,6 @@ abstract class AbstractRequest
      */
     private $params;
 
-    /**
-     * @var array params  The defined params
-     */
     private $validator;
 
     function __construct(Request $request)
