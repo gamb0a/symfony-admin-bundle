@@ -8,7 +8,7 @@ class BadRequestHttpException extends BadRequest
 {
     protected $errorList;
 
-    public function __construct(string $message = null, array $errorList = [])
+    public function __construct(array $errorList = [], string $message = "Hubo un error al procesar la solicitud")
     {
         $this->errorList = $errorList;
         parent::__construct($message);

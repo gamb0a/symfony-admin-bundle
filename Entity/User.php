@@ -2,9 +2,10 @@
 
 namespace Gamboa\AdminBundle\Entity;
 
+use Gamboa\AdminBundle\Helper\AuthenticationHelper;
+
 class User
 {
-
     const STATUS_ACTIVE = 'Activo';
     const STATUS_DELETED = 'Eliminado';
     const STATUS_SUSPENDED = 'Suspendido';
@@ -40,7 +41,7 @@ class User
     }
 
     public function passwordEqualsTo(string $password) : bool {
-        return false;
+        return AuthenticationHelper::hashPassword($password) === $this->password;
     }
     
     public function isActive() : bool {

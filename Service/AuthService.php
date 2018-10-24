@@ -2,52 +2,66 @@
 
 namespace Gamboa\AdminBundle\Service;
 
+use Gamboa\AdminBundle\Exception\BadRequestHttpException;
 use Gamboa\AdminBundle\Request\LoginRequest;
 use Gamboa\AdminBundle\Request\RegisterRequest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class AuthService
 {
-    function isValid(string $token) : bool
+
+    private $userService;
+    private $sessionService;
+
+    function __construct(UserService $userService, SessionService $sessionService) {
+        $this->userService = $userService;
+        $this->sessionService = $sessionService;
+    }
+
+    public function isValid(string $token) : bool
     {
         return false;
     }
 
-    function getUser(string $token) : ParameterBag
+    public function getUser(string $token) : ParameterBag
     {
-        return new ParameterBag([
-            "name" => "User",
-            "rut" => "11.000.111-1",
-            "actions" => []
-        ]);
+        return new ParameterBag(["name" => "User", "rut" => "11.000.111-1", "actions" => []]);
     }
 
-    function login(LoginRequest $req, UserService $userService, SessionService $sessionService) : array
+    public function login(LoginRequest $req) : array
     {
         $rut = $req->get("rut");
         $password = $req->get("password");
 
-        // if user exists
-        if (!$userService->exists($rut)) ;
-            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", ["general" => "Rut y/o Contraseña inválidos"]); 
-            
-        $user = $userService->getUserByRut($rut);
+        try {
+            $user = $this->userService->getUserByRut($rut);
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException(["general" => "Rut y/o Contraseña inválidos"]);
+        }
+        
         // if its the correct password
         if (!$user->passwordEqualsTo($password))
-            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", ["general" => "Rut y/o Contraseña inválidos"]); 
+            throw new BadRequestHttpException(["general" => "Rut y/o Contraseña inválidos"]); 
 
         // if its active
         if (!$user->isActive())
-            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", ["general" => "La cuenta no está activa"]);
+            throw new BadRequestHttpException(["general" => "La cuenta no está activa"]);
 
         // generate a new token sessio for the given user
-        $token = $sessionService->generateTokenForUser($user);
+        $token = $this->sessionService->generateTokenForUser($user);
 
         return $token;
     }
 
-    function register(RegisterRequest $req)
+    public function register(RegisterRequest $req)
     {
-
+        return $this->userService->add(
+            $req->get("rut"),
+            $req->get("dv"),
+            $req->get("name"),
+            $req->get("username"),
+            $req->get("email"),
+            $req->get("password")
+        );
     }
 }

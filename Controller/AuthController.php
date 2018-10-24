@@ -5,9 +5,7 @@ namespace Gamboa\AdminBundle\Controller;
 use Gamboa\AdminBundle\Annotation\PublicAction;
 use Gamboa\AdminBundle\Annotation\NotAuthenticated;
 use Gamboa\AdminBundle\Annotation\Authenticated;
-
 use Gamboa\AdminBundle\Request\RegisterRequest;
-
 use Gamboa\AdminBundle\Service\AuthService;
 use Gamboa\AdminBundle\Request\LoginRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

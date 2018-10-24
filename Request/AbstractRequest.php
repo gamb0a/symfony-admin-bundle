@@ -29,7 +29,7 @@ abstract class AbstractRequest
         $this->validator = Validation::createValidator();
         $this->setParameters();
         $this->validate();
-        $this->customValidation();
+        $this->postValidation();
     }
 
     protected function addOptional(string $name, array $validations = [], mixed $defaultValue = null)
@@ -53,6 +53,14 @@ abstract class AbstractRequest
     public function get(string $name)
     {
         return array_key_exists($name, $this->params) ? $this->params[$name]["value"] : null;
+    }
+
+    protected function set(string $name, mixed $value)
+    {
+        if (array_key_exists($name, $this->params))
+            $this->params[$name]["value"] = $value;
+        else
+            $this->params[$name] = ["value" => $value];
     }
 
     protected function setParameters()
@@ -93,11 +101,11 @@ abstract class AbstractRequest
         }
 
         if (count($errorList) > 0) {
-            throw new BadRequestHttpException("Hubo un error al procesar la solicitud", $errorList);
+            throw new BadRequestHttpException($errorList);
         }
     }
 
-    protected function customValidation()
+    protected function postValidation()
     {
 
     }
