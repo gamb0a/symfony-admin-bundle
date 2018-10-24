@@ -9,7 +9,8 @@
         "sensio/framework-extra-bundle": "*",
         "symfony/validator": "*",
         "doctrine/doctrine-migrations-bundle": "^2.0",
-        "symfony/monolog-bundle": "^3.3"
+        "symfony/monolog-bundle": "^3.3",
+        "symfony/console": "*"
     },
     "autoload": {
         "psr-4": {
