@@ -11,18 +11,25 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraint;
 use Gamboa\AdminBundle\Helper\Format;
+use Gamboa\AdminBundle\Service\UserService;
 use Gamboa\AdminBundle\Constraint\Rut;
 
 class CrearUsuarioCommand extends Command
 {
+    protected static $defaultName = 'admin:crear-usuario';
 
     private $validator;
+    private $userManager;
+
+    public function __construct(UserService $userManager)
+    {
+        parent::__construct();
+        $this->userManager = $userManager;
+    }
 
     protected function configure()
     {
-        $this
-        ->setName('admin:crear-usuario')
-        ->setDescription('Crea un nuevo usuario para el Administrador, con todas las acciones habilitadas');
+        $this->setDescription('Crea un nuevo usuario para el Administrador, con todas las acciones habilitadas');
     }
 
     private function validate($value, Constraint $constraint) {
@@ -56,7 +63,7 @@ class CrearUsuarioCommand extends Command
         $rutQuestion->setValidator(function ($value) {
             $this->validate($value, new Assert\NotNull());
             $this->validate($value, new Assert\NotBlank());
-            $this->validate($value, new Rut(Format::RUT_FORMATTED));
+            $this->validate($value, new Rut(Format::RUT_NO_DOTS));
             return trim($value);
         });
         
@@ -96,10 +103,19 @@ class CrearUsuarioCommand extends Command
         $output->writeln("Nombre Completo: $name");
         $output->writeln("Email: $email");
         $output->writeln("Rut: $rut");
-        $output->writeln("Contraseña: $password");
-        $output->writeln("Repetir Contraseña: $passwordRepeat");
-
+        $output->writeln("Contraseña: ********");
+        
         $confirmarQuestion = new ConfirmationQuestion('Desea continuar (y/n)?', false, '/^(y|s)/i');
         $confirma = $helper->ask($input, $output, $confirmarQuestion);
+        
+        if ($confirma) {
+            list($rutN, $dv) = explode("-", $rut);
+            $rutN = intval(str_replace(".", "", $rutN));
+            $this->userManager->add($rutN, $dv, $name, null, $email, $password, true);
+            $output->writeln('Se creó el usuario con éxito');
+            return;
+        }
+
+        $output->writeln('<error>Canceló el ingreso</error>');
     }
 }

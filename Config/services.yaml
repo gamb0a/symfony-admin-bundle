@@ -4,14 +4,9 @@ services:
         autoconfigure: true
         public: false
 
-    Gamboa\AdminBundle\Service\UserService:
-        autowire: true
-
-    Gamboa\AdminBundle\Service\SessionService:
-        autowire: true
-
-    Gamboa\AdminBundle\Service\AuthService:
-        autowire: true
+    Gamboa\AdminBundle\Service\UserService: ~
+    Gamboa\AdminBundle\Service\SessionService: ~
+    Gamboa\AdminBundle\Service\AuthService: ~
 
     Gamboa\AdminBundle\EventListener\ViewListener:
         tags:
@@ -24,7 +19,7 @@ services:
             - { name: kernel.event_listener, event: kernel.controller }
 
     Gamboa\AdminBundle\Command\CrearUsuarioCommand:
-        tags: ['console.command']
+        tags: ['console.command', 'controller.service_arguments']
 
     Gamboa\AdminBundle\Controller\:
         resource: '../Controller'

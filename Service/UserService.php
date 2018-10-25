@@ -3,6 +3,7 @@
 namespace Gamboa\AdminBundle\Service;
 
 use Gamboa\AdminBundle\Entity\User;
+use Gamboa\AdminBundle\Helper\AuthenticationHelper;
 use Doctrine\DBAL\Connection;
 
 class UserService
@@ -15,7 +16,6 @@ class UserService
 
     public function add($rut, $dv, $name, $username, $email, $password, $isAdmin = false) : int 
     {
-        
         if ($this->existsByRut($rut)) {
             throw new \Exception("Ya existe un usuario con ese rut");
         }
@@ -29,7 +29,8 @@ class UserService
         $stmt->bindValue("dv", $dv);
         $stmt->bindValue("name", $name);
         $stmt->bindValue("username", $username);
-        $stmt->bindValue("password", $password);
+        $stmt->bindValue("email", $email);
+        $stmt->bindValue("password", AuthenticationHelper::passwordHash($password));
         $stmt->bindValue("is_admin", $isAdmin);
         $stmt->execute();
         $userId = $this->connection->lastInsertId();
