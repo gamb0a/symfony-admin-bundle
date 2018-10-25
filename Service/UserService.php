@@ -47,6 +47,29 @@ class UserService
         return ($stmt->rowCount() > 0);
     }
     
+    public function getUserByToken(string $token) : User
+    {
+        $stmt = $this->connection->prepare("SELECT 
+            user.id, rut, dv, name,
+            CONCAT(FORMAT(rut, 0, 'de_DE'), '-', dv) AS rut_formateado,
+            COALESCE(username, '') AS username,
+            email, password, status,
+            last_password_change, user.created_at, user.modified_at
+        FROM user 
+            INNER JOIN session ON session.user = user.id
+        WHERE session.token = :token");
+        $stmt->bindValue("token", $token);
+        $stmt->execute();
+        
+        if ($stmt->rowCount() <= 0) {
+            throw new \Exception("No existe el usuario");
+        }
+
+        $userFetch = $stmt->fetch();
+        $user = $this->createFromFetch($userFetch);
+        return $user;
+    }
+    
     public function getUserByRut(string $rut) : User
     {
         $stmt = $this->connection->prepare("SELECT 

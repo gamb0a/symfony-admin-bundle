@@ -3,6 +3,7 @@
 namespace Gamboa\AdminBundle\Service;
 
 use Gamboa\AdminBundle\Exception\BadRequestHttpException;
+use Gamboa\AdminBundle\Entity\User;
 use Gamboa\AdminBundle\Request\LoginRequest;
 use Gamboa\AdminBundle\Request\RegisterRequest;
 use Gamboa\AdminBundle\Helper\AuthenticationHelper;
@@ -24,9 +25,9 @@ class AuthService
         return $this->sessionService->tokenIsValid($token);
     }
 
-    public function getUser(string $token) : ParameterBag
+    public function getUser(string $token) : User
     {
-        return new ParameterBag(["name" => "User", "rut" => "11.000.111-1", "actions" => []]);
+        return $this->userService->getUserBytoken($token);
     }
 
     public function login(LoginRequest $req) : array

@@ -60,7 +60,7 @@ class ControllerListener
 
             $request->attributtes->set("user", $authenticatedUser);
             // Authenticated user actions validation
-            if (!in_array($currentActionAnnotation->getName(), $authenticatedUser->get("actions"))) {
+            if (!$authenticatedUser->hasAction($currentActionAnnotation->getName())) {
                 $this->logger->error("AuthenticatedUser trying to execute Unauthorized Action");
                 throw new AccessDeniedHttpException("No tiene permiso para acceder a esta sección");
             }

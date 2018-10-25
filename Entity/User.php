@@ -20,10 +20,11 @@ class User
     private $createdAt;
     private $modifiedAt;
     private $lastPasswordChange;
+    private $actions;
 
     function __construct(int $id, int $rut, string $dv, string $rutFormateado, string $name, string $email,
                         string $password, string $status, string $username, \DateTime $createdAt, \DateTime $modifiedAt,
-                        \DateTime $lastPasswordChange) {
+                        \DateTime $lastPasswordChange, $actions = []) {
         $this->id = $id;
         $this->rut = $rut;
         $this->dv = $dv;
@@ -36,19 +37,34 @@ class User
         $this->createdAt = $createdAt;
         $this->modifiedAt = $modifiedAt;
         $this->lastPasswordChange = $lastPasswordChange;
+        $this->actions = $actions;
     }
 
-    public function getId() :int
+    public function getId() : int
     {
         return $this->id;
     }
 
-    public function getName() :string
+    public function getName() : string
     {
         return $this->name;
     }
 
-    public function getPassword() :string
+    public function getPassword() : string
+    {
+        return $this->password;
+    }
+
+    public function hasAction(string $action) : bool
+    {
+        foreach ($this->actions as $key => $action) {
+            if ($action->getCode() === $action)
+                return true;
+        }
+        return false;
+    }
+
+    public function getActions() : array
     {
         return $this->password;
     }
