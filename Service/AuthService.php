@@ -5,6 +5,7 @@ namespace Gamboa\AdminBundle\Service;
 use Gamboa\AdminBundle\Exception\BadRequestHttpException;
 use Gamboa\AdminBundle\Request\LoginRequest;
 use Gamboa\AdminBundle\Request\RegisterRequest;
+use Gamboa\AdminBundle\Helper\AuthenticationHelper;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class AuthService
@@ -20,7 +21,7 @@ class AuthService
 
     public function isValid(string $token) : bool
     {
-        return false;
+        return $this->sessionService->tokenIsValid($token);
     }
 
     public function getUser(string $token) : ParameterBag
@@ -48,9 +49,7 @@ class AuthService
             throw new BadRequestHttpException(["general" => "La cuenta no está activa"]);
 
         // generate a new token sessio for the given user
-        $token = $this->sessionService->generateTokenForUser($user);
-
-        return $token;
+        return $this->sessionService->generateTokenForUser($user);
     }
 
     public function register(RegisterRequest $req)

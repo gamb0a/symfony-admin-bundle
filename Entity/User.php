@@ -2,8 +2,6 @@
 
 namespace Gamboa\AdminBundle\Entity;
 
-use Gamboa\AdminBundle\Helper\AuthenticationHelper;
-
 class User
 {
     const STATUS_ACTIVE = 'Activo';
@@ -40,11 +38,27 @@ class User
         $this->lastPasswordChange = $lastPasswordChange;
     }
 
-    public function passwordEqualsTo(string $password) : bool {
-        return AuthenticationHelper::hashPassword($password) === $this->password;
+    public function getId() :int
+    {
+        return $this->id;
+    }
+
+    public function getName() :string
+    {
+        return $this->name;
+    }
+
+    public function getPassword() :string
+    {
+        return $this->password;
+    }
+
+    public function passwordEqualsTo(string $password) : bool 
+    {
+        return password_verify($password , $this->password);
     }
     
     public function isActive() : bool {
-        return $status === self::STATUS_ACTIVE;
+        return $this->status === self::STATUS_ACTIVE;
     }
 }

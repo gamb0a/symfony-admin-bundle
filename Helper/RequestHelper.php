@@ -32,7 +32,7 @@ class RequestHelper
     {
         $token = null;
         if ($this->request->headers->has("Authorization")) {
-            $token = $this->request->headers->get("Authorization");
+            $token = str_replace("Bearer ", "", $this->request->headers->get("Authorization"));
         }
         return $token;
     }

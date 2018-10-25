@@ -33,10 +33,8 @@ class AuthController extends AbstractController
      * @NotAuthenticated
      */
     public function login(Request $req, AuthService $auth)
-    {   
-        $token = $auth->login(new LoginRequest($req));
-        // TODO set token
-        return ["success" => true, "token" => $token];
+    {
+        return $auth->login(new LoginRequest($req));
     }
 
     /**

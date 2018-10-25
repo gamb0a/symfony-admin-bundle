@@ -55,7 +55,7 @@ abstract class AbstractRequest
         return array_key_exists($name, $this->params) ? $this->params[$name]["value"] : null;
     }
 
-    protected function set(string $name, mixed $value)
+    protected function set(string $name, $value)
     {
         if (array_key_exists($name, $this->params))
             $this->params[$name]["value"] = $value;

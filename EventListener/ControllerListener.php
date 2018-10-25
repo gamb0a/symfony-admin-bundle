@@ -41,13 +41,12 @@ class ControllerListener
         if ($typeOfAction === RequestHelper::PUBLIC_ACCESS) {
             return;
         }
-
         $authenticatedUser = null;
         $bearerToken = null;
         if ($requestHelper->hasBearerToken()) {
             $bearerToken = $requestHelper->getBearerToken();
-            if ($authService->isValid($bearerToken))
-                $authenticatedUser = $authService->getUser($bearerToken);
+            if ($this->authService->isValid($bearerToken))
+                $authenticatedUser = $this->authService->getUser($bearerToken);
         }
         
         // if its an AuthenticatedAction, we need to validate
