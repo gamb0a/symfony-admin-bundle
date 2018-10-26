@@ -101,8 +101,12 @@ abstract class AbstractRequest
         }
 
         if (count($errorList) > 0) {
-            throw new BadRequestHttpException($errorList);
+            $this->throwException($errorList);
         }
+    }
+
+    protected function throwException (array $errorList) {
+        throw new BadRequestHttpException($errorList);
     }
 
     protected function postValidation()

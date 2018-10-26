@@ -15,7 +15,7 @@ class RegisterRequest extends AbstractRequest
     {
         $this->addRequired("rut", "Debe ingresar un rut", [
             new Validation(new Assert\NotBlank(), "Debe ingresar un rut"),
-            new Validation(new Rut(Format::RUT_FORMATTED)),
+            new Validation(new Rut(Format::RUT_NO_DOTS)),
         ]);
 
         $this->addRequired("name", "Debe ingresar un nombre", [
@@ -41,6 +41,12 @@ class RegisterRequest extends AbstractRequest
 
     protected function postValidation()
     {
+        if ($this->get("password") !== $this->get("password_confirmation")) {
+            $errorList = [];
+            $errorList["password"] = "Las contraseñas no coinciden";
+            $this->throwException($errorList);
+        }
+
         // split rut
         list($rut, $dv) = explode("-", $this->get("rut"));
         $rut = intval(str_replace(".", "", $rut));

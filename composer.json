@@ -16,5 +16,9 @@
         "psr-4": {
             "Gamboa\\AdminBundle\\": ""
         }
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^4.1",
+        "symfony/flex": "^1.1"
     }
 }
