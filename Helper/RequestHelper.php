@@ -17,18 +17,17 @@ class RequestHelper
     const PUBLIC_ACCESS = 3;
 
     private $request;
-
-    function __construct(Request $req)
-    {
+    
+    public function setRequest(Request $req) {
         $this->request = $req;
     }
 
-    function hasBearerToken() : bool
+    public function hasBearerToken() : bool
     {
         return $this->request->headers->has("Authorization");
     }
 
-    function getBearerToken() : string
+    public function getBearerToken() : string
     {
         $token = null;
         if ($this->request->headers->has("Authorization")) {
@@ -37,7 +36,7 @@ class RequestHelper
         return $token;
     }
 
-    function typeOfAction() : int
+    public function getActionType() : int
     {
         $authenticatedAnnotation = null;
         $controllerResolver = new ControllerResolver();
@@ -63,7 +62,7 @@ class RequestHelper
         return $currentType;
     }
 
-    function getAuthenticatedAnnotation() : array
+    public function getAuthenticatedAnnotation() : string
     {
         $authenticatedAnnotation = null;
         $controllerResolver = new ControllerResolver();
@@ -76,6 +75,14 @@ class RequestHelper
                 break;
             }
         }
-        return $authenticatedAnnotation;
+        return $authenticatedAnnotation->getName();
+    }
+
+    public function getUser($user) {
+        $this->request->attributes->get("user");
+    }
+
+    public function setUser($user) {
+        $this->request->attributes->set("user", $user);
     }
 }

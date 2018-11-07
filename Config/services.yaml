@@ -7,6 +7,7 @@ services:
     Gamboa\AdminBundle\Service\UserService: ~
     Gamboa\AdminBundle\Service\SessionService: ~
     Gamboa\AdminBundle\Service\AuthService: ~
+    Gamboa\AdminBundle\Helper\RequestHelper: ~
 
     Gamboa\AdminBundle\EventListener\ViewListener:
         tags:

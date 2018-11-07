@@ -7,7 +7,6 @@ use Gamboa\AdminBundle\Entity\User;
 use Gamboa\AdminBundle\Request\LoginRequest;
 use Gamboa\AdminBundle\Request\RegisterRequest;
 use Gamboa\AdminBundle\Helper\AuthenticationHelper;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 class AuthService
 {

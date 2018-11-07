@@ -3,6 +3,7 @@ bin/
 vendor/
 composer.lock
 symfony.lock
+docker-compose.yml
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml

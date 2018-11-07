@@ -2,70 +2,78 @@
 
 namespace Gamboa\AdminBundle\EventListener;
 
-use Gamboa\AdminBundle\Helper\RequestHelper;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Psr\Log\LoggerInterface;
+use Gamboa\AdminBundle\Exception\ForbiddenHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Psr\Log\LoggerInterface;
 use Gamboa\AdminBundle\Service\AuthService;
+use Gamboa\AdminBundle\Helper\RequestHelper;
 
 class ControllerListener
 {
-
+    private $requestHelper;
     private $logger;
     private $authService;
 
-    public function __construct(LoggerInterface $logger, AuthService $authService)
+    public function __construct(LoggerInterface $logger, AuthService $authService, RequestHelper $requestHelper)
     {
         $this->logger = $logger;
         $this->authService = $authService;
+        $this->requestHelper = $requestHelper;
+    }
+
+    private function validateHostname(string $host) {
+        if (isset($_ENV["TRUSTED_HOSTS"])) {
+            if (!in_array($host, explode(",", $_ENV["TRUSTED_HOSTS"]))) {
+                throw new ForbiddenHttpException();
+            }
+        } else {
+            $this->logger->warn('No env variable "TRUSTED_HOST"');
+        }
     }
 
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
+        $this->requestHelper->setRequest($request);
+        
 
         // Hostname validation
-        $host = $request->getHost();
-        if (isset($_ENV["TRUSTED_HOSTS"])) {
-            if (!in_array($host, explode(",", $_ENV["TRUSTED_HOSTS"]))) {
-                throw new ForbiddenHttpException();
-            }
-        } else
-            $this->logger->warn('No env variable "TRUSTED_HOST"');
+        $this->validateHostname($request->getHost());
 
-        $requestHelper = new RequestHelper($request);
-        $typeOfAction = $requestHelper->typeOfAction();
+        $actionType = $this->requestHelper->getActionType();
 
-        // if public access, continue
-        if ($typeOfAction === RequestHelper::PUBLIC_ACCESS) {
-            return;
-        }
         $authenticatedUser = null;
         $bearerToken = null;
-        if ($requestHelper->hasBearerToken()) {
-            $bearerToken = $requestHelper->getBearerToken();
+        if ($this->requestHelper->hasBearerToken()) {
+            $bearerToken = $this->requestHelper->getBearerToken();
             if ($this->authService->isValid($bearerToken))
                 $authenticatedUser = $this->authService->getUser($bearerToken);
         }
         
-        // if its an AuthenticatedAction, we need to validate
-        // the current session and its actions
-        if ($typeOfAction === RequestHelper::AUTHENTICATED) {
-            $currentActionAnnotation = $requestHelper->getAuthenticatedAnnotation();
+        $this->requestHelper->setUser($authenticatedUser);
+        // public access, no checks
+        if ($actionType === RequestHelper::PUBLIC_ACCESS) {
+            return;
+        }
+        
+        // AuthenticatedAction
+        if ($actionType === RequestHelper::AUTHENTICATED) {
+            
             if ($authenticatedUser == null) {
-                $this->logger->error("UnatuhenticatedUser trying to execute AuthenticatedAction");
+                $this->logger->error("UnauthenticatedUser trying to execute AuthenticatedAction");
                 throw new AccessDeniedHttpException("No tiene permiso para acceder a esta sección");
             }
 
-            $request->attributtes->set("user", $authenticatedUser);
+            $currentActionAnnotation = $this->requestHelper->getAuthenticatedAnnotation();
             // Authenticated user actions validation
-            if (!$authenticatedUser->hasAction($currentActionAnnotation->getName())) {
+            if (!$authenticatedUser->hasAction($currentActionAnnotation)) {
                 $this->logger->error("AuthenticatedUser trying to execute Unauthorized Action");
                 throw new AccessDeniedHttpException("No tiene permiso para acceder a esta sección");
             }
 
-        } elseif ($typeOfAction === RequestHelper::NOT_AUTHENTICATED) {
+        } elseif ($actionType === RequestHelper::NOT_AUTHENTICATED) {
             if ($authenticatedUser !== null) {
                 $this->logger->error("AuthenticatedUser trying to execute NotAuthenticatedAction");
                 throw new AccessDeniedHttpException("No tiene permiso para acceder a esta sección");
@@ -76,7 +84,6 @@ class ControllerListener
                 $this->logger->error("NonAuthenticated User trying to execute AuthenticatedAction");
                 throw new AccessDeniedHttpException("No tiene permiso para acceder a esta sección");
             }
-            $request->attributtes->set("user", $authenticatedUser);
         }
     }
 }
