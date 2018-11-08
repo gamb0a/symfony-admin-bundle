@@ -37,7 +37,6 @@ class ControllerListener
     {
         $request = $event->getRequest();
         $this->requestHelper->setRequest($request);
-        
 
         // Hostname validation
         $this->validateHostname($request->getHost());
