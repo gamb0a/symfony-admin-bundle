@@ -24,11 +24,11 @@ class RutValidator extends ConstraintValidator
 
         // By default Format::RUT_FORMATTED
         $exp = '/^\d{1,2}\.\d{3}\.\d{3}[-][0-9kK]{1}$/';
-        if ($constraint->format == Format::RUT_NUMBER_ONLY) {
+        if (Format::RUT_NUMBER_ONLY == $constraint->format) {
             $exp = '/^[0-9]+$/';
-        } elseif ($constraint->format == Format::RUT_DV_ONLY) {
+        } elseif (Format::RUT_DV_ONLY == $constraint->format) {
             $exp = '/^[0-9Kk]{1}$/';
-        } elseif ($constraint->format == Format::RUT_NO_DOTS) {
+        } elseif (Format::RUT_NO_DOTS == $constraint->format) {
             $exp = '/^\d{1,2}\d{3}\d{3}[-][0-9kK]{1}$/';
         }
 

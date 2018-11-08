@@ -9,14 +9,16 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20181024142343 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Creates User and Session tables';
     }
 
-    public function down(Schema $schema) : void { }
-    
-    public function up(Schema $schema) : void
+    public function down(Schema $schema): void
+    {
+    }
+
+    public function up(Schema $schema): void
     {
         $this->addSql('CREATE TABLE `user` (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -35,8 +37,8 @@ final class Version20181024142343 extends AbstractMigration
           ENGINE = InnoDB
           DEFAULT CHARACTER SET = utf8
           COLLATE = utf8_general_ci');
-          
-          $this->addSql('CREATE TABLE `session` (
+
+        $this->addSql('CREATE TABLE `session` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `token` VARCHAR(255) NOT NULL,
                 `user` INT(11) NOT NULL,

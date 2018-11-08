@@ -15,21 +15,20 @@ class Authenticated extends ConfigurationAnnotation
     public function getAsArray()
     {
         return [
-            "name" => $this->name,
-            "description" => $this->description
+            'name' => $this->name,
+            'description' => $this->description,
         ];
     }
 
     public function __construct(array $data)
     {
-
         if (isset($data['value'])) {
             $data['name'] = $data['value'];
             unset($data['value']);
         }
 
         foreach ($data as $key => $value) {
-            $method = 'set' . str_replace('_', '', $key);
+            $method = 'set'.str_replace('_', '', $key);
             if (!method_exists($this, $method)) {
                 throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, \get_class($this)));
             }
@@ -59,6 +58,7 @@ class Authenticated extends ConfigurationAnnotation
 
     /**
      * @return string
+     *
      * @see ConfigurationInterface
      */
     public function getAliasName()
@@ -67,9 +67,10 @@ class Authenticated extends ConfigurationAnnotation
     }
 
     /**
-     * Only one action directive is allowed
+     * Only one action directive is allowed.
      *
-     * @return Boolean
+     * @return bool
+     *
      * @see ConfigurationInterface
      */
     public function allowArray()

@@ -21,14 +21,15 @@ class ExceptionListener
         }
 
         $response = new JsonResponse();
-        $payload = ["message" => $exception->getMessage(), "code" => $statusCode];
+        $payload = ['message' => $exception->getMessage(), 'code' => $statusCode];
 
         if ($exception instanceof BadRequestHttpException) {
-            $payload["errors"] = $exception->getErrorList();
+            $payload['errors'] = $exception->getErrorList();
         }
 
-        if ($_ENV['APP_ENV'] === 'dev')
-            $payload["trace"] = $exception->getTraceAsString();
+        if ('dev' === $_ENV['APP_ENV']) {
+            $payload['trace'] = $exception->getTraceAsString();
+        }
 
         $response->setData($payload);
         $event->setResponse($response);

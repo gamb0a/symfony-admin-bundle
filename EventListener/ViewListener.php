@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Gamboa\AdminBundle\EventListener;
 
@@ -11,7 +11,7 @@ class ViewListener
     {
         $result = $event->getControllerResult();
         if (!is_array($result)) {
-            throw new \UnexpectedValueException("La respuesta debe ser de tipo array");
+            throw new \UnexpectedValueException('La respuesta debe ser de tipo array');
         }
         $event->setResponse(new JsonResponse($result));
     }

@@ -13,7 +13,7 @@ class ServicesExtension extends Extension
     {
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__ . '/../Config')
+            new FileLocator(__DIR__.'/../Config')
         );
         $loader->load('services.yaml');
     }

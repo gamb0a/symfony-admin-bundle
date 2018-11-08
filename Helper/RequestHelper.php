@@ -17,26 +17,28 @@ class RequestHelper
     const PUBLIC_ACCESS = 3;
 
     private $request;
-    
-    public function setRequest(Request $req) {
+
+    public function setRequest(Request $req)
+    {
         $this->request = $req;
     }
 
-    public function hasBearerToken() : bool
+    public function hasBearerToken(): bool
     {
-        return $this->request->headers->has("Authorization");
+        return $this->request->headers->has('Authorization');
     }
 
-    public function getBearerToken() : string
+    public function getBearerToken(): string
     {
         $token = null;
-        if ($this->request->headers->has("Authorization")) {
-            $token = str_replace("Bearer ", "", $this->request->headers->get("Authorization"));
+        if ($this->request->headers->has('Authorization')) {
+            $token = str_replace('Bearer ', '', $this->request->headers->get('Authorization'));
         }
+
         return $token;
     }
 
-    public function getActionType() : int
+    public function getActionType(): int
     {
         $authenticatedAnnotation = null;
         $controllerResolver = new ControllerResolver();
@@ -59,10 +61,11 @@ class RequestHelper
                 break;
             }
         }
+
         return $currentType;
     }
 
-    public function getAuthenticatedAnnotation() : string
+    public function getAuthenticatedAnnotation(): string
     {
         $authenticatedAnnotation = null;
         $controllerResolver = new ControllerResolver();
@@ -75,14 +78,17 @@ class RequestHelper
                 break;
             }
         }
+
         return $authenticatedAnnotation->getName();
     }
 
-    public function getUser($user) {
-        $this->request->attributes->get("user");
+    public function getUser($user)
+    {
+        $this->request->attributes->get('user');
     }
 
-    public function setUser($user) {
-        $this->request->attributes->set("user", $user);
+    public function setUser($user)
+    {
+        $this->request->attributes->set('user', $user);
     }
 }

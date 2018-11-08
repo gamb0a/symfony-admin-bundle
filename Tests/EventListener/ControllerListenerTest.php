@@ -1,15 +1,11 @@
-<?php 
+<?php
 
 namespace Gamboa\AdminBundle\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
 use Gamboa\AdminBundle\EventListener\ControllerListener;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Gamboa\AdminBundle\Exception\ForbiddenHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Psr\Log\LoggerInterface;
-use Gamboa\AdminBundle\Service\AuthService;
 use Gamboa\AdminBundle\Helper\RequestHelper;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -158,36 +154,43 @@ class ControllerListenerTest extends TestCase
         $listener->onKernelController($this->getControllerEventMockInvalidHost());
     }
 
-    public function getListenerMock($reqHelper, $authService = null) {
+    public function getListenerMock($reqHelper, $authService = null)
+    {
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
             ->disableOriginalConstructor()
             ->getMock();
 
-        if ($authService == null)
+        if (null == $authService) {
             $authService = $this->getMockBuilder('Gamboa\AdminBundle\Service\AuthService')
                 ->disableOriginalConstructor()
                 ->getMock();
-            
+        }
+
         $listener = new ControllerListener($logger, $authService, $reqHelper);
 
         return $listener;
     }
 
-    public function getAuthService() {
+    public function getAuthService()
+    {
         $reqHelper = $this->getMockBuilder('Gamboa\AdminBundle\Service\AuthService')
             ->disableOriginalConstructor()
             ->getMock();
+
         return $reqHelper;
     }
 
-    public function getRequestHelper() {
+    public function getRequestHelper()
+    {
         $reqHelper = $this->getMockBuilder('Gamboa\AdminBundle\Helper\RequestHelper')
             ->disableOriginalConstructor()
             ->getMock();
+
         return $reqHelper;
     }
 
-    public function getControllerEventMockInvalidHost() {
+    public function getControllerEventMockInvalidHost()
+    {
         $filterControllerEvent = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
             ->disableOriginalConstructor()
             ->getMock();
@@ -207,7 +210,8 @@ class ControllerListenerTest extends TestCase
         return $filterControllerEvent;
     }
 
-    public function getControllerEventMockValidHost() {
+    public function getControllerEventMockValidHost()
+    {
         $filterControllerEvent = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
             ->disableOriginalConstructor()
             ->getMock();
@@ -228,5 +232,4 @@ class ControllerListenerTest extends TestCase
 
         return $filterControllerEvent;
     }
-
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Gamboa\AdminBundle\Tests\Validation;
 
@@ -9,8 +9,8 @@ use Gamboa\AdminBundle\Constraint\Rut;
 class ValidationTest extends TestCase
 {
     public function testGetConstraint()
-    {   
-        $testMessage = "test message";
+    {
+        $testMessage = 'test message';
         $validation = new Validation(new Rut(), $testMessage);
         $this->assertInstanceOf(Rut::class, $validation->getConstraint());
         $this->assertEquals($testMessage, $validation->getConstraint()->message);

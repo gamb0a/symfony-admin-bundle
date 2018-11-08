@@ -9,12 +9,12 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20181024214959 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Update User';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->addSql('ALTER TABLE `user` 
             CHANGE COLUMN `password` `password` VARCHAR(45) NOT NULL ,
@@ -25,5 +25,8 @@ final class Version20181024214959 extends AbstractMigration
             ADD COLUMN `is_admin` TINYINT(4) NOT NULL DEFAULT 0 AFTER `modified_at`
         ');
     }
-    public function down(Schema $schema) : void { }
+
+    public function down(Schema $schema): void
+    {
+    }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Gamboa\AdminBundle\Entity;
 
@@ -22,9 +22,21 @@ class User
     private $lastPasswordChange;
     private $actions;
 
-    function __construct(int $id, int $rut, string $dv, string $rutFormateado, string $name, string $email,
-                        string $password, string $status, string $username, \DateTime $createdAt, \DateTime $modifiedAt,
-                        \DateTime $lastPasswordChange, $actions = []) {
+    public function __construct(
+        int $id,
+        int $rut,
+        string $dv,
+        string $rutFormateado,
+        string $name,
+        string $email,
+                        string $password,
+        string $status,
+        string $username,
+        \DateTime $createdAt,
+        \DateTime $modifiedAt,
+                        \DateTime $lastPasswordChange,
+        $actions = []
+    ) {
         $this->id = $id;
         $this->rut = $rut;
         $this->dv = $dv;
@@ -40,41 +52,44 @@ class User
         $this->actions = $actions;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getPassword() : string
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function hasAction(string $action) : bool
+    public function hasAction(string $action): bool
     {
         foreach ($this->actions as $key => $action) {
-            if ($action->getCode() === $action)
+            if ($action->getCode() === $action) {
                 return true;
+            }
         }
+
         return false;
     }
 
-    public function getActions() : array
+    public function getActions(): array
     {
         return $this->password;
     }
 
-    public function passwordEqualsTo(string $password) : bool 
+    public function passwordEqualsTo(string $password): bool
     {
-        return password_verify($password , $this->password);
+        return password_verify($password, $this->password);
     }
-    
-    public function isActive() : bool {
-        return $this->status === self::STATUS_ACTIVE;
+
+    public function isActive(): bool
+    {
+        return self::STATUS_ACTIVE === $this->status;
     }
 }

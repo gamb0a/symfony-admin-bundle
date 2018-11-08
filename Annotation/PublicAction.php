@@ -11,6 +11,7 @@ class PublicAction extends ConfigurationAnnotation
 {
     /**
      * @return string
+     *
      * @see ConfigurationInterface
      */
     public function getAliasName()
@@ -19,9 +20,10 @@ class PublicAction extends ConfigurationAnnotation
     }
 
     /**
-     * Only one action directive is allowed
+     * Only one action directive is allowed.
      *
-     * @return Boolean
+     * @return bool
+     *
      * @see ConfigurationInterface
      */
     public function allowArray()

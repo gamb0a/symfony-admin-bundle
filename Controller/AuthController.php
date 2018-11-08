@@ -2,9 +2,7 @@
 
 namespace Gamboa\AdminBundle\Controller;
 
-use Gamboa\AdminBundle\Annotation\PublicAction;
 use Gamboa\AdminBundle\Annotation\NotAuthenticated;
-use Gamboa\AdminBundle\Annotation\Authenticated;
 use Gamboa\AdminBundle\Request\RegisterRequest;
 use Gamboa\AdminBundle\Service\AuthService;
 use Gamboa\AdminBundle\Request\LoginRequest;
@@ -25,7 +23,8 @@ class AuthController extends AbstractController
     public function register(Request $req)
     {
         $request = new RegisterRequest($req);
-        return ["rut" => $request->get("rut"), "pass" => $request->get("password")];
+
+        return ['rut' => $request->get('rut'), 'pass' => $request->get('password')];
     }
 
     /**
