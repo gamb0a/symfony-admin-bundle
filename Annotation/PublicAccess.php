@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 /**
  * @Annotation
  */
-class PublicAction extends ConfigurationAnnotation
+class PublicAccess extends ConfigurationAnnotation
 {
     /**
      * @return string
@@ -16,7 +16,7 @@ class PublicAction extends ConfigurationAnnotation
      */
     public function getAliasName()
     {
-        return 'public_action';
+        return 'public_access';
     }
 
     /**

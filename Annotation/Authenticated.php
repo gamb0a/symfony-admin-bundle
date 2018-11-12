@@ -22,6 +22,10 @@ class Authenticated extends ConfigurationAnnotation
 
     public function __construct(array $data)
     {
+        if (!isset($data['value']) && !isset($data['name'])) {
+            throw new \LogicException(sprintf('"name" property is required on annotation %s', \get_class($this)));
+        }
+
         if (isset($data['value'])) {
             $data['name'] = $data['value'];
             unset($data['value']);
@@ -46,12 +50,12 @@ class Authenticated extends ConfigurationAnnotation
         $this->description = $value;
     }
 
-    public function getName($value)
+    public function getName()
     {
         return $this->name;
     }
 
-    public function getDescription($value)
+    public function getDescription()
     {
         return $this->description;
     }

@@ -16,18 +16,19 @@
     </php>
 
     <testsuites>
-        <testsuite name="Bundle Test Suite">
+        <testsuite name="AdminBundle Suite">
             <directory>Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./</directory>
+            <directory>.</directory>
         </whitelist>
     </filter>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+        <listener class="Symfony\Bridge\PhpUnit\CoverageListener" />
     </listeners>
 </phpunit>

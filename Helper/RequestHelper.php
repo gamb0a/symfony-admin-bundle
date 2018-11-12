@@ -30,24 +30,30 @@ class RequestHelper
 
     public function getBearerToken(): string
     {
-        $token = null;
         if ($this->request->headers->has('Authorization')) {
-            $token = str_replace('Bearer ', '', $this->request->headers->get('Authorization'));
+            $token = trim(str_replace('Bearer', '', $this->request->headers->get('Authorization')));
+            if ($token === '') 
+                throw new \RuntimeException("Authorization header inválido");
+        } else {
+            throw new \RuntimeException("No posee header Authorization");
         }
 
         return $token;
     }
 
-    public function getActionType(): int
-    {
-        $authenticatedAnnotation = null;
+    private function getAnnotations() {
         $controllerResolver = new ControllerResolver();
         $controller = $controllerResolver->getController($this->request);
         $reflectionMethod = new \ReflectionMethod($controller[0], $controller[1]);
         $reader = new AnnotationReader();
+        return $reader->getMethodAnnotations($reflectionMethod);
+    }
+
+    public function getActionType(): int
+    {
         // By default, all actions needs authentication
         $currentType = self::AUTH_DEFAULT;
-        foreach ($reader->getMethodAnnotations($reflectionMethod) as $annotation) {
+        foreach ($this->getAnnotations() as $annotation) {
             if ($annotation instanceof Authenticated) {
                 $currentType = self::AUTHENTICATED;
                 break;
@@ -61,22 +67,21 @@ class RequestHelper
                 break;
             }
         }
-
         return $currentType;
     }
 
-    public function getAuthenticatedAnnotation(): string
+    public function getAuthenticatedActionName(): string
     {
         $authenticatedAnnotation = null;
-        $controllerResolver = new ControllerResolver();
-        $controller = $controllerResolver->getController($this->request);
-        $reflectionMethod = new \ReflectionMethod($controller[0], $controller[1]);
-        $reader = new AnnotationReader();
-        foreach ($reader->getMethodAnnotations($reflectionMethod) as $annotation) {
+        foreach ($this->getAnnotations() as $annotation) {
             if ($annotation instanceof Authenticated) {
                 $authenticatedAnnotation = $annotation;
                 break;
             }
+        }
+
+        if ($authenticatedAnnotation === null) {
+            throw new \RuntimeException("Authenticated Annotation Not Found");
         }
 
         return $authenticatedAnnotation->getName();
