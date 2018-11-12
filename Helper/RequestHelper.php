@@ -32,20 +32,23 @@ class RequestHelper
     {
         if ($this->request->headers->has('Authorization')) {
             $token = trim(str_replace('Bearer', '', $this->request->headers->get('Authorization')));
-            if ($token === '') 
-                throw new \RuntimeException("Authorization header inválido");
+            if ('' === $token) {
+                throw new \RuntimeException('Authorization header inválido');
+            }
         } else {
-            throw new \RuntimeException("No posee header Authorization");
+            throw new \RuntimeException('No posee header Authorization');
         }
 
         return $token;
     }
 
-    private function getAnnotations() {
+    private function getAnnotations()
+    {
         $controllerResolver = new ControllerResolver();
         $controller = $controllerResolver->getController($this->request);
         $reflectionMethod = new \ReflectionMethod($controller[0], $controller[1]);
         $reader = new AnnotationReader();
+
         return $reader->getMethodAnnotations($reflectionMethod);
     }
 
@@ -67,6 +70,7 @@ class RequestHelper
                 break;
             }
         }
+
         return $currentType;
     }
 
@@ -80,8 +84,8 @@ class RequestHelper
             }
         }
 
-        if ($authenticatedAnnotation === null) {
-            throw new \RuntimeException("Authenticated Annotation Not Found");
+        if (null === $authenticatedAnnotation) {
+            throw new \RuntimeException('Authenticated Annotation Not Found');
         }
 
         return $authenticatedAnnotation->getName();
