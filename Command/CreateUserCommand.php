@@ -14,9 +14,9 @@ use Gamboa\AdminBundle\Helper\Format;
 use Gamboa\AdminBundle\Service\UserService;
 use Gamboa\AdminBundle\Constraint\Rut;
 
-class CrearUsuarioCommand extends Command
+class CreateUserCommand extends Command
 {
-    protected static $defaultName = 'admin:crear-usuario';
+    protected static $defaultName = 'admin:create-user';
 
     private $validator;
     private $userManager;
