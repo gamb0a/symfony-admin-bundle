@@ -11,7 +11,9 @@ use Symfony\Component\Validator\Constraint;
 class Rut extends Constraint
 {
     public $format;
-    public $message = 'El rut ingresado es inválido';
+    public $message = 'Rut inválido';
+    public $messageFormat = 'Formato inválido';
+    public $messageInvalid = 'El rut ingresado es inválido';
 
     public function __construct($format = null)
     {
@@ -19,7 +21,6 @@ class Rut extends Constraint
         if (!in_array($format, [Format::RUT_NUMBER_ONLY, Format::RUT_DV_ONLY, Format::RUT_NO_DOTS, Format::RUT_FORMATTED])) {
             $format = Format::RUT_FORMATTED;
         }
-
         $this->format = $format;
     }
 }

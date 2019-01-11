@@ -61,18 +61,19 @@ class LoginRequestTest extends TestCase
     public function providerValidParams()
     {
         return [
-            ['17807823-2', 'dummypass', 17807823, '2'],
-            ['23807823-3', 'dummypass', 23807823, '3'],
+            ['24500-3', 'dummypass', 24500, '3'],
+            ['21582090-4', 'dummypass', 21582090, '4'],
+            ['23807823-7', 'dummypass', 23807823, '7'],
         ];
     }
 
     public function providerInvalidParams()
     {
         return [
-            ['17.807.823-2', 'dummypass'],
-            ['17.807823-2', 'dummypass'],
-            ['17.807823-2', null],
-            ['17807823-2', ''],
+            ['23.807.823-2', 'dummypass'],
+            ['23.807823-2', 'dummypass'],
+            ['23.807823-7', null],
+            ['23807823-7', ''],
             ['', 'pass'],
             [null, 'pass'],
         ];

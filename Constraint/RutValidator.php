@@ -14,27 +14,57 @@ class RutValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (null === $value || '' === $value) {
-            return;
-        }
 
-        if (!is_string($value)) {
-            throw new UnexpectedTypeException($value, 'string');
+        if (!is_string($value) && !is_int($value)) {
+            throw new UnexpectedTypeException($value, 'string|int');
         }
 
         // By default Format::RUT_FORMATTED
-        $exp = '/^\d{1,2}\.\d{3}\.\d{3}[-][0-9kK]{1}$/';
+        $exp = '/^([1-9]{1}\d{1}|[1-9]{1})\.\d{3}(\.\d{3}){0,1}[-][0-9kK]{1}$/';
         if (Format::RUT_NUMBER_ONLY == $constraint->format) {
-            $exp = '/^[0-9]+$/';
+            $exp = '/^([1-9]{1}\d{1}|[1-9]{1})\d{3}(\d{3}){0,1}$/';
         } elseif (Format::RUT_DV_ONLY == $constraint->format) {
             $exp = '/^[0-9Kk]{1}$/';
         } elseif (Format::RUT_NO_DOTS == $constraint->format) {
-            $exp = '/^\d{1,2}\d{3}\d{3}[-][0-9kK]{1}$/';
+            $exp = '/^([1-9]{1}\d{1}|[1-9]{1})\d{3}(\d{3}){0,1}[-][0-9kK]{1}$/';
         }
 
         if (!preg_match($exp, $value, $matches)) {
-            $this->context->buildViolation($constraint->message)
+            $this->context
+                ->buildViolation($constraint->messageFormat)
                 ->addViolation();
+            return;
         }
+
+        // Logic Validation
+        if (in_array($constraint->format, [Format::RUT_NO_DOTS, Format::RUT_NO_DOTS])) {
+            if($this->validateRut($value) === false)
+                $this->context
+                    ->buildViolation($constraint->messageInvalid)
+                    ->addViolation();
+        }
+    }
+
+    public function validateRut($rut) {
+
+        $rut = preg_replace('/[\.\-]/i', '', $rut);
+        $dv = substr($rut, -1);
+        $numero = substr($rut, 0, strlen($rut) - 1);
+        $i = 2;
+        $suma = 0;
+
+        foreach (array_reverse(str_split($numero)) as $v) {
+            if ($i == 8) $i = 2;
+            $suma += $v * $i;
+            ++$i;
+        }
+
+        $dvr = 11 - ($suma % 11);
+        if ($dvr == 11) $dvr = 0;
+        if ($dvr == 10) $dvr = 'K';
+        if ($dvr == strtoupper($dv)) 
+            return true;
+        else 
+            return false;
     }
 }
