@@ -81,7 +81,7 @@ abstract class AbstractRequest
                         $errors = $this->validator->validate($this->params[$key]['value'], $validation->getConstraint());
                         if (count($errors) > 0) {
                             $errorList[$key] = $errors[0]->getMessage();
-                            continue;
+                            break;
                         }
                     }
                 }
@@ -94,7 +94,7 @@ abstract class AbstractRequest
                     $errors = $this->validator->validate($this->params[$key]['value'], $validation->getConstraint());
                     if (count($errors) > 0) {
                         $errorList[$key] = $errors[0]->getMessage();
-                        continue;
+                        break;
                     }
                 }
             }
