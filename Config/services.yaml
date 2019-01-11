@@ -19,7 +19,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
 
-    Gamboa\AdminBundle\Command\CrearUsuarioCommand:
+    Gamboa\AdminBundle\Command\CreateUserCommand:
+        tags: ['console.command', 'controller.service_arguments']
+
+    Gamboa\AdminBundle\Command\DumpActionsCommand:
         tags: ['console.command', 'controller.service_arguments']
 
     Gamboa\AdminBundle\Controller\:
