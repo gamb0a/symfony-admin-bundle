@@ -2,15 +2,14 @@
 
 namespace Gamboa\AdminBundle\Tests\Constraint;
 
-use PHPUnit\Framework\TestCase;
 use Gamboa\AdminBundle\Helper\Format;
 use Gamboa\AdminBundle\Constraint\Rut;
 use Gamboa\AdminBundle\Constraint\RutValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+
 class RutValidatorTest extends ConstraintValidatorTestCase
 {
-
     protected function createValidator()
     {
         return new RutValidator();
@@ -45,7 +44,8 @@ class RutValidatorTest extends ConstraintValidatorTestCase
         ->assertRaised();
     }
 
-    public function getValidFormatValues () {
+    public function getValidFormatValues()
+    {
         return [
             [Format::RUT_FORMATTED, '21.582.090-4'],
             [Format::RUT_FORMATTED, '15.846.327-k'],
@@ -73,19 +73,21 @@ class RutValidatorTest extends ConstraintValidatorTestCase
             [Format::RUT_DV_ONLY, 'k'],
             [Format::RUT_DV_ONLY, 'K'],
             [Format::RUT_DV_ONLY, '0'],
-            [Format::RUT_DV_ONLY, 0]
+            [Format::RUT_DV_ONLY, 0],
         ];
     }
 
-    public function getExceptionValues () {
+    public function getExceptionValues()
+    {
         return [
             [Format::RUT_NUMBER_ONLY, null],
-            [Format::RUT_NUMBER_ONLY, array('foo', 'bar')],
-            [Format::RUT_NUMBER_ONLY, new \stdClass],
+            [Format::RUT_NUMBER_ONLY, ['foo', 'bar']],
+            [Format::RUT_NUMBER_ONLY, new \stdClass()],
         ];
     }
 
-    public function getInvalidFormatValues () {
+    public function getInvalidFormatValues()
+    {
         return [
             [Format::RUT_FORMATTED, '17.87823'],
             [Format::RUT_FORMATTED, '01.878.323-5'],

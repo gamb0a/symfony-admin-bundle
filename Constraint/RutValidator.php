@@ -14,7 +14,6 @@ class RutValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-
         if (!is_string($value) && !is_int($value)) {
             throw new UnexpectedTypeException($value, 'string|int');
         }
@@ -33,20 +32,22 @@ class RutValidator extends ConstraintValidator
             $this->context
                 ->buildViolation($constraint->messageFormat)
                 ->addViolation();
+
             return;
         }
 
         // Logic Validation
         if (in_array($constraint->format, [Format::RUT_NO_DOTS, Format::RUT_NO_DOTS])) {
-            if($this->validateRut($value) === false)
+            if (false === $this->validateRut($value)) {
                 $this->context
                     ->buildViolation($constraint->messageInvalid)
                     ->addViolation();
+            }
         }
     }
 
-    public function validateRut($rut) {
-
+    public function validateRut($rut)
+    {
         $rut = preg_replace('/[\.\-]/i', '', $rut);
         $dv = substr($rut, -1);
         $numero = substr($rut, 0, strlen($rut) - 1);
@@ -54,17 +55,24 @@ class RutValidator extends ConstraintValidator
         $suma = 0;
 
         foreach (array_reverse(str_split($numero)) as $v) {
-            if ($i == 8) $i = 2;
+            if (8 == $i) {
+                $i = 2;
+            }
             $suma += $v * $i;
             ++$i;
         }
 
         $dvr = 11 - ($suma % 11);
-        if ($dvr == 11) $dvr = 0;
-        if ($dvr == 10) $dvr = 'K';
-        if ($dvr == strtoupper($dv)) 
+        if (11 == $dvr) {
+            $dvr = 0;
+        }
+        if (10 == $dvr) {
+            $dvr = 'K';
+        }
+        if ($dvr == strtoupper($dv)) {
             return true;
-        else 
+        } else {
             return false;
+        }
     }
 }
