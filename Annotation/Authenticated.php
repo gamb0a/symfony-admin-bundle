@@ -26,10 +26,20 @@ class Authenticated extends ConfigurationAnnotation
             throw new \LogicException(sprintf('"name" property is required on annotation %s', \get_class($this)));
         }
 
+        if (!isset($data['description'])) {
+            throw new \LogicException(sprintf('"description" property is required on annotation %s', \get_class($this)));
+        }
+
         if (isset($data['value'])) {
             $data['name'] = $data['value'];
             unset($data['value']);
         }
+
+        $expression = '/^[a-z]+(-[a-z]+)*\.[a-z]+(-[a-z]+)*\.[a-z]+(-[a-z]+)*$/';
+        if (!preg_match($expression, $data['name'], $matches)) {
+            throw new \LogicException(sprintf('"name" property has an invalid format on annotation %s', \get_class($this)));
+        }
+        
 
         foreach ($data as $key => $value) {
             $method = 'set'.str_replace('_', '', $key);

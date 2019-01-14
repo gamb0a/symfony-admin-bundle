@@ -20,7 +20,7 @@ class AuthController extends AbstractController
      * @Route("/register", methods={"GET"}, name="gadmin.auth.register")
      * @NotAuthenticated
      */
-    public function register(Request $req)
+    public function registerAction(Request $req)
     {
         $request = new RegisterRequest($req);
 
@@ -31,7 +31,7 @@ class AuthController extends AbstractController
      * @Route("/login", methods={"GET"}, name="gadmin.auth.login")
      * @NotAuthenticated
      */
-    public function login(Request $req, AuthService $auth)
+    public function loginAction(Request $req, AuthService $auth)
     {
         return $auth->login(new LoginRequest($req));
     }
@@ -39,7 +39,7 @@ class AuthController extends AbstractController
     /**
      * @Route("/check", methods={"GET"}, name="gadmin.auth.check")
      */
-    public function check()
+    public function checkAction()
     {
         throw new NotFoundHttpException();
     }
@@ -47,7 +47,7 @@ class AuthController extends AbstractController
     /**
      * @Route("/logout", methods={"GET"}, name="gadmin.auth.logout")
      */
-    public function logout()
+    public function logoutAction()
     {
         throw new NotFoundHttpException();
     }

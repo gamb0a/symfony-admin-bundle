@@ -9,10 +9,11 @@ use Gamboa\AdminBundle\Service\UserService;
 use Symfony\Component\Routing\RouterInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Gamboa\AdminBundle\Annotation\Authenticated;
+use Symfony\Component\Console\Helper\Table;
 
 class DumpActionsCommand extends Command
 {
-    protected static $defaultName = 'admin:dump-actions';
+    protected static $defaultName = 'admin:create-actions';
 
     public function __construct(UserService $userManager, RouterInterface $router)
     {
@@ -28,9 +29,7 @@ class DumpActionsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Rescatando acciones desde las siguientes rutas');
         $routes = $this->router->getRouteCollection()->all();
-        $output->writeln('Se rescataron '.count($routes).' rutas');
 
         $methods = [];
         foreach ($routes as $route) {
@@ -43,15 +42,27 @@ class DumpActionsCommand extends Command
 
         $annotationReader = new AnnotationReader();
         // Iterate over methods
+        $actions = [];
         foreach ($methods as $method) {
             // Authenticated Annotations
             foreach ($annotationReader->getMethodAnnotations($method) as $currentAnnotation) {
                 if ($currentAnnotation instanceof Authenticated) {
                     $actionName = $currentAnnotation->getName();
                     $actionDescription = $currentAnnotation->getDescription();
-                    $output->writeln('Acción Encontrada: '.$actionName.' '.$actionDescription);
+                    list($level1, $level2, $level3) = explode('.', $actionName);
+                    $actions[$actionName] = [$actionName, $level1, $level2, $level3, $actionDescription];
                 }
             }
         }
+        
+        ksort($actions);
+        $table = new Table($output);
+        $table->setHeaders(['Action', 'Level 1', 'Level 2', 'Level 3', 'Description']);
+        $table->setRows($actions);
+        $actionCount = count($actions);
+        $table->render();
+
+        // split levels
+
     }
 }

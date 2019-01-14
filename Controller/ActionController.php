@@ -12,11 +12,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class ActionController extends AbstractController
 {
     /**
-     * @Route("/dump", methods={"GET"}, name="gadmin.action.dump")
-     * @Authenticated("gadmin.action.dump", description="Listar todas las acciones en el sistema")
+     * @Route("/dump", methods={"GET"}, name="gadmin.actions.dump")
+     * @Authenticated("gadmin.actions.dump", description="Listar todas las acciones")
      */
     public function dump()
     {
         return [];
     }
+
+    /**
+     * @Route("/{actionId}", methods={"GET"}, name="gadmin.actions.show")
+     * @Authenticated("gadmin.actions.show", description="Mostrar acción")
+     */
+    public function show($actionId)
+    {
+        return [];
+    }
+
 }
